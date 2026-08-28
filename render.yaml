@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: gridbot-usdt-irt
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn --bind 0.0.0.0:$PORT app:app
+    plan: free
