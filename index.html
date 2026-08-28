@@ -1,0 +1,7 @@
+<!doctype html><html lang="fa" dir="rtl"><head><meta name="viewport" content="width=device-width,initial-scale=1"><title>Grid Bot USDT/IRT</title><link rel="stylesheet" href="/static/style.css"></head><body><main>
+<header><h1>GRID BOT</h1><span id="mode">PAPER</span></header>
+<section class="cards"><div>قیمت<br><b id="price">-</b></div><div>ارزش کل<br><b id="equity">-</b></div><div>موجودی IRT<br><b id="cash">-</b></div><div>USDT<br><b id="usdt">-</b></div></section>
+<section class="panel"><h2>تنظیمات Grid</h2><div class="form"><label>کف<input id="low" type="number" value="90000"></label><label>سقف<input id="high" type="number" value="110000"></label><label>تعداد Grid<input id="grids" type="number" value="10"></label><label>سرمایه<input id="capital" type="number" value="10000000"></label><label>کارمزد<input id="fee" type="number" step="0.0001" value="0.0025"></label></div><button onclick="save()">محاسبه Grid</button><button id="start" onclick="toggle()">شروع ربات</button></section>
+<section class="panel"><h2>قیمت آزمایشی</h2><div class="form"><input id="simprice" type="number" value="100000"><button onclick="simulate()">اجرای Tick</button></div></section>
+<section class="panel"><h2>Gridها</h2><div id="levels"></div></section><section class="panel"><h2>معاملات اخیر</h2><div id="trades">—</div></section>
+</main><script src="/static/app.js"></script></body></html>
