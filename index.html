@@ -2,36 +2,86 @@
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#0b1020"><meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#080d18"><meta name="apple-mobile-web-app-capable" content="yes">
 <title>Grid Bot — USDT/IRT</title>
 <style>
-*{box-sizing:border-box}body{margin:0;background:#080d18;color:#eef2ff;font-family:Tahoma,Arial,sans-serif}button,input{font:inherit}button{cursor:pointer}.wrap{max-width:720px;margin:auto;padding:14px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.brand{font-size:20px;font-weight:800}.sub{font-size:12px;color:#93a0ba}.card{background:#111827;border:1px solid #263247;border-radius:18px;padding:16px;margin:10px 0;box-shadow:0 8px 30px #0003}.price{font-size:30px;font-weight:900;margin:5px 0}.pill{padding:7px 10px;border-radius:999px;background:#182238;color:#9fb2d6;font-size:12px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.stat{background:#0d1422;border-radius:14px;padding:12px}.label{font-size:11px;color:#8f9bb2}.value{font-weight:800;margin-top:5px}.form{display:grid;grid-template-columns:1fr 1fr;gap:10px}.field label{display:block;font-size:12px;color:#9ba7bc;margin-bottom:5px}.field input{width:100%;background:#0a101c;color:#fff;border:1px solid #2a3850;border-radius:11px;padding:11px;outline:none}.field input:focus{border-color:#7c8cff}.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.btn{border:0;border-radius:12px;padding:13px;font-weight:800}.start{background:#16a06a;color:#fff}.stop{background:#b4233c;color:#fff}.secondary{background:#202b40;color:#dce5f7}.table{width:100%;border-collapse:collapse;font-size:12px}.table th,.table td{padding:9px 5px;border-bottom:1px solid #253047;text-align:center}.buy{color:#36d399}.sell{color:#ff7187}.muted{color:#7f8aa1}.notice{font-size:11px;line-height:1.8;color:#aab5c9}.status{display:flex;gap:8px;align-items:center}.dot{width:9px;height:9px;border-radius:50%;background:#777}.on{background:#25d17d}.off{background:#e05263}.footer{padding:15px 4px 30px;text-align:center;color:#66738b;font-size:10px}@media(max-width:460px){.grid,.form{grid-template-columns:1fr}.price{font-size:26px}}
+*{box-sizing:border-box}body{margin:0;background:#080d18;color:#eef2ff;font-family:Tahoma,Arial,sans-serif}button,input{font:inherit}button{cursor:pointer}.wrap{max-width:760px;margin:auto;padding:14px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.brand{font-size:21px;font-weight:900}.sub{font-size:12px;color:#93a0ba}.card{background:#111827;border:1px solid #263247;border-radius:18px;padding:16px;margin:10px 0;box-shadow:0 8px 30px #0003}.price{font-size:30px;font-weight:900;margin:5px 0}.pill{padding:7px 10px;border-radius:999px;background:#182238;color:#9fb2d6;font-size:12px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.stat{background:#0d1422;border-radius:14px;padding:12px}.label{font-size:11px;color:#8f9bb2}.value{font-weight:800;margin-top:5px}.form{display:grid;grid-template-columns:1fr 1fr;gap:10px}.field label{display:block;font-size:12px;color:#9ba7bc;margin-bottom:5px}.field input{width:100%;background:#0a101c;color:#fff;border:1px solid #2a3850;border-radius:11px;padding:11px;outline:none}.field input:focus{border-color:#7c8cff}.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.btn{border:0;border-radius:12px;padding:13px;font-weight:800}.start{background:#16a06a;color:#fff}.stop{background:#b4233c;color:#fff}.secondary{background:#202b40;color:#dce5f7}.table{width:100%;border-collapse:collapse;font-size:12px}.table th,.table td{padding:9px 5px;border-bottom:1px solid #253047;text-align:center}.buy{color:#36d399}.sell{color:#ff7187}.muted{color:#7f8aa1}.notice{font-size:11px;line-height:1.9;color:#aab5c9}.status{display:flex;gap:8px;align-items:center}.dot{width:9px;height:9px;border-radius:50%;background:#777}.on{background:#25d17d}.off{background:#e05263}.yellow{background:#e4b84a}.footer{padding:15px 4px 30px;text-align:center;color:#66738b;font-size:10px}.livebox{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-top:8px}.livebox span{background:#0d1422;padding:8px 10px;border-radius:10px;font-size:11px}.ok{color:#36d399}.warn{color:#e4b84a}.err{color:#ff7187}@media(max-width:460px){.grid,.form{grid-template-columns:1fr}.price{font-size:26px}}
 </style></head>
 <body><div class="wrap">
 <div class="top"><div><div class="brand">GRID BOT</div><div class="sub">USDT / IRT • نسخه وب موبایل</div></div><span class="pill" id="mode">PAPER</span></div>
-<div class="card"><div class="sub">قیمت فعلی</div><div class="price" id="currentPrice">100,000</div><div class="status"><span class="dot off" id="dot"></span><span id="statusText">ربات متوقف است</span></div></div>
-<div class="grid"><div class="stat"><div class="label">سرمایه</div><div class="value" id="capitalOut">10,000,000 تومان</div></div><div class="stat"><div class="label">سود خالص</div><div class="value" id="profitOut">0 تومان</div></div><div class="stat"><div class="label">تعداد معاملات</div><div class="value" id="tradesOut">0</div></div><div class="stat"><div class="label">گریدها</div><div class="value" id="countOut">10</div></div></div>
+<div class="card"><div class="sub">قیمت لحظه‌ای والکس</div><div class="price" id="currentPrice">در حال دریافت...</div><div class="status"><span class="dot yellow" id="dot"></span><span id="statusText">در حال اتصال به بازار</span></div><div class="livebox"><span>Bid: <b id="bid">-</b></span><span>Ask: <b id="ask">-</b></span><span>وضعیت بازار: <b id="marketStatus">-</b></span></div></div>
+<div class="grid"><div class="stat"><div class="label">سرمایه Paper</div><div class="value" id="capitalOut">10,000,000 تومان</div></div><div class="stat"><div class="label">سود خالص</div><div class="value" id="profitOut">0 تومان</div></div><div class="stat"><div class="label">تعداد معاملات</div><div class="value" id="tradesOut">0</div></div><div class="stat"><div class="label">گریدها</div><div class="value" id="countOut">10</div></div></div>
 <div class="card"><h3>تنظیمات Grid</h3><div class="form">
 <div class="field"><label>قیمت کف</label><input id="low" type="number" value="95000"></div>
 <div class="field"><label>قیمت سقف</label><input id="high" type="number" value="105000"></div>
 <div class="field"><label>تعداد Grid</label><input id="count" type="number" min="2" value="10"></div>
 <div class="field"><label>سرمایه (تومان)</label><input id="capital" type="number" value="10000000"></div>
-<div class="field"><label>قیمت فعلی</label><input id="price" type="number" value="100000"></div>
+<div class="field"><label>قیمت مرجع</label><input id="price" type="number" value="100000"></div>
 <div class="field"><label>کارمزد %</label><input id="fee" type="number" step="0.01" value="0.2"></div>
 </div><div class="actions"><button class="btn secondary" onclick="buildGrid()">محاسبه Grid</button><button class="btn start" id="toggle" onclick="toggleBot()">شروع Paper</button></div></div>
-<div class="card"><h3>گریدها</h3><div style="overflow:auto"><table class="table"><thead><tr><th>#</th><th>قیمت</th><th>عمل</th><th>وضعیت</th></tr></thead><tbody id="gridBody"></tbody></table></div></div>
-<div class="card"><h3>معاملات</h3><div style="overflow:auto"><table class="table"><thead><tr><th>زمان</th><th>نوع</th><th>قیمت</th><th>مبلغ</th></tr></thead><tbody id="tradeBody"></tbody></table></div><div class="actions"><button class="btn secondary" onclick="resetBot()">ریست</button><button class="btn secondary" onclick="simulateTick()">حرکت قیمت</button></div></div>
-<div class="card notice">این نسخه فقط شبیه‌سازی است و هیچ سفارش واقعی ارسال نمی‌کند. در مرحله بعد، قیمت واقعی و سپس اتصال امن به API والکس اضافه می‌شود. کلید API نباید در کد سمت کاربر یا GitHub قرار بگیرد.</div>
-<div class="footer">Grid Bot • USDT/IRT • Paper Trading</div></div>
+<div class="card"><h3>گریدها</h3><div style="overflow:auto"><table class="table"><thead><tr><th>#</th><th>قیمت</th><th>عمل بعدی</th><th>وضعیت</th></tr></thead><tbody id="gridBody"></tbody></table></div></div>
+<div class="card"><h3>معاملات Paper</h3><div style="overflow:auto"><table class="table"><thead><tr><th>زمان</th><th>نوع</th><th>قیمت</th><th>مقدار USDT</th><th>کارمزد</th></tr></thead><tbody id="tradeBody"></tbody></table></div><div class="actions"><button class="btn secondary" onclick="resetBot()">ریست Paper</button></div></div>
+<div class="card notice">قیمت این نسخه از بازار عمومی والکس دریافت می‌شود و هنوز هیچ سفارش واقعی ارسال نمی‌شود. اتصال زنده از WebSocket عمومی والکس است. برای معامله واقعی، کلید API باید فقط روی Backend امن نگهداری شود و هرگز داخل GitHub یا این صفحه قرار نگیرد.</div>
+<div class="footer">Grid Bot • USDT/IRT • Live Market + Paper Trading</div></div>
 <script>
-let grids=[],running=false,trades=[],profit=0,usdt=0,quote=0;
-const $=id=>document.getElementById(id), fmt=n=>Number(n||0).toLocaleString('en-US',{maximumFractionDigits:2});
-function buildGrid(){let lo=+$('low').value,hi=+$('high').value,n=Math.max(2,+$('count').value||10);if(!(hi>lo)){alert('سقف باید بیشتر از کف باشد');return}let step=(hi-lo)/(n-1);grids=[];for(let i=0;i<n;i++)grids.push({i:i+1,p:lo+i*step,action:i<n-1?'BUY':'SELL',state:'آماده'});$('countOut').textContent=n;renderGrid()}
-function renderGrid(){ $('gridBody').innerHTML=grids.slice().reverse().map(g=>`<tr><td>${g.i}</td><td>${fmt(g.p)}</td><td class="${g.action==='BUY'?'buy':'sell'}">${g.action}</td><td>${g.state}</td></tr>`).join('') }
-function toggleBot(){running=!running;$('toggle').textContent=running?'توقف Paper':'شروع Paper';$('toggle').className='btn '+(running?'stop':'start');$('dot').className='dot '+(running?'on':'off');$('statusText').textContent=running?'ربات فعال است':'ربات متوقف است';if(running)quote=+$('price').value;}
-function simulateTick(){if(!running){alert('اول Paper Trading را شروع کن');return}let lo=+$('low').value,hi=+$('high').value,step=(hi-lo)/(Math.max(2,+$('count').value)-1);let p=quote||+$('price').value;let dir=Math.random()<.5?-1:1;p=Math.min(hi,Math.max(lo,p+dir*step*(Math.floor(Math.random()*3)+1)));quote=p;$('price').value=Math.round(p);$('currentPrice').textContent=fmt(p);let nearest=grids.reduce((a,b)=>Math.abs(b.p-p)<Math.abs(a.p-p)?b:a,grids[0]);if(nearest&&Math.abs(nearest.p-p)<step*.35){let amount=(+$('capital').value)/(Math.max(2,+$('count').value));let fee=amount*(+$('fee').value)/100;trades.unshift({t:new Date().toLocaleTimeString('fa-IR'),type:nearest.action,p:nearest.p,a:amount});profit += nearest.action==='SELL'?amount*0.002-fee:-fee;nearest.state='اجرا شد';renderGrid();renderTrades();$('profitOut').textContent=fmt(profit)+' تومان';$('tradesOut').textContent=trades.length;}}
-function renderTrades(){$('tradeBody').innerHTML=trades.slice(0,20).map(t=>`<tr><td>${t.t}</td><td class="${t.type==='BUY'?'buy':'sell'}">${t.type}</td><td>${fmt(t.p)}</td><td>${fmt(t.a)}</td></tr>`).join('')||'<tr><td colspan="4" class="muted">هنوز معامله‌ای ثبت نشده</td></tr>'}
-function resetBot(){running=false;trades=[];profit=0;quote=+$('price').value;$('toggle').textContent='شروع Paper';$('toggle').className='btn start';$('dot').className='dot off';$('statusText').textContent='ربات متوقف است';$('profitOut').textContent='0 تومان';$('tradesOut').textContent='0';buildGrid();renderTrades();$('currentPrice').textContent=fmt(quote)}
-buildGrid();renderTrades();$('capitalOut').textContent=fmt(+$('capital').value)+' تومان';
-$('capital').addEventListener('input',()=> $('capitalOut').textContent=fmt(+$('capital').value)+' تومان');$('price').addEventListener('input',()=>{if(!running)$('currentPrice').textContent=fmt(+$('price').value)});
+const SYMBOL='USDTTMN', WS_URL='wss://api.wallex.ir/ws';
+let grids=[],running=false,trades=[],profit=0,quote=0,base=0,lastPrice=null,ws=null,reconnectTimer=null;
+const $=id=>document.getElementById(id),fmt=n=>Number(n||0).toLocaleString('en-US',{maximumFractionDigits:2}),now=()=>new Date().toLocaleTimeString('fa-IR');
+function setStatus(text,kind='yellow'){ $('statusText').textContent=text; $('dot').className='dot '+kind; }
+function buildGrid(){
+ const lo=+$('low').value,hi=+$('high').value,n=Math.max(2,+$('count').value||10);
+ if(!(hi>lo)){alert('سقف باید بیشتر از کف باشد');return}
+ const step=(hi-lo)/(n-1);grids=[];
+ for(let i=0;i<n;i++) grids.push({i:i+1,p:lo+i*step,next:'-',state:'آماده'});
+ $('countOut').textContent=n; renderGrid();
+}
+function renderGrid(){ $('gridBody').innerHTML=grids.slice().reverse().map(g=>`<tr><td>${g.i}</td><td>${fmt(g.p)}</td><td class="${g.next==='BUY'?'buy':g.next==='SELL'?'sell':''}">${g.next}</td><td>${g.state}</td></tr>`).join(''); }
+function toggleBot(){
+ running=!running;$('toggle').textContent=running?'توقف Paper':'شروع Paper';$('toggle').className='btn '+(running?'stop':'start');
+ $('mode').textContent=running?'PAPER ON':'PAPER';
+ if(running){quote=+$('capital').value;base=0;lastPrice=lastPrice||+$('price').value;setStatus('Paper Trading فعال است','on');}
+ else setStatus('ربات متوقف است','off');
+}
+function crossed(prev,p){
+ if(prev==null)return null;
+ let hit=null;
+ if(p<prev){ for(let i=grids.length-1;i>=0;i--) if(grids[i].p<=prev&&grids[i].p>p){hit=grids[i];break;} }
+ if(p>prev){ for(let i=0;i<grids.length;i++) if(grids[i].p>=prev&&grids[i].p<p){hit=grids[i];break;} }
+ return hit;
+}
+function processPrice(p){
+ if(!Number.isFinite(p))return;
+ quotePrice(p);
+ if(!running){lastPrice=p;return}
+ const prev=lastPrice; const g=crossed(prev,p); lastPrice=p;
+ if(!g)return;
+ const feeRate=(+$('fee').value||0)/100;
+ const capital=+$('capital').value||0;
+ const amountQuote=capital/Math.max(2,+$('count').value||10);
+ // Direction is determined by actual movement across the grid.
+ if(p<prev){
+   if(quote>=amountQuote){ const qty=amountQuote/g.p; const fee=amountQuote*feeRate; quote-=amountQuote+fee;base+=qty;profit-=fee;g.next='SELL';g.state='خرید شد';addTrade('BUY',g.p,qty,fee); }
+ } else if(p>prev){
+   const qty=Math.min(base,amountQuote/g.p);
+   if(qty>0){ const gross=qty*g.p; const fee=gross*feeRate; base-=qty;quote+=gross-fee;profit+=gross-fee-(qty*(g.p-(g.p)));g.next='BUY';g.state='فروش شد';addTrade('SELL',g.p,qty,fee); }
+ }
+ renderGrid();updateStats();
+}
+function quotePrice(p){$('currentPrice').textContent=fmt(p);$('price').value=Math.round(p);}
+function addTrade(type,p,qty,fee){trades.unshift({t:now(),type,p,qty,fee});renderTrades();updateStats();}
+function renderTrades(){ $('tradeBody').innerHTML=trades.slice(0,30).map(t=>`<tr><td>${t.t}</td><td class="${t.type==='BUY'?'buy':'sell'}">${t.type}</td><td>${fmt(t.p)}</td><td>${fmt(t.qty)}</td><td>${fmt(t.fee)}</td></tr>`).join('')||'<tr><td colspan="5" class="muted">هنوز معامله‌ای ثبت نشده</td></tr>'; }
+function updateStats(){ $('profitOut').textContent=fmt(profit)+' تومان';$('tradesOut').textContent=trades.length;$('capitalOut').textContent=fmt(+$('capital').value)+' تومان'; }
+function resetBot(){running=false;trades=[];profit=0;quote=+$('capital').value;base=0;lastPrice=quote?lastPrice:+$('price').value;$('toggle').textContent='شروع Paper';$('toggle').className='btn start';$('mode').textContent='PAPER';setStatus('ربات متوقف است','off');buildGrid();renderTrades();updateStats();}
+function connectWS(){
+ try{ws=new WebSocket(WS_URL);}catch(e){setStatus('خطا در اتصال بازار','err');return}
+ ws.onopen=()=>{setStatus('قیمت زنده والکس متصل است','on');ws.send(JSON.stringify(['subscribe',{channel:SYMBOL+'@marketCap'}]));};
+ ws.onmessage=e=>{try{let msg=JSON.parse(e.data);let data=Array.isArray(msg)?msg[1]:msg;if(data&&data.symbol===SYMBOL&&data.lastPrice){$('bid').textContent=fmt(data.bidPrice);$('ask').textContent=fmt(data.askPrice);$('marketStatus').textContent=data.lastTradeSide||'ONLINE';processPrice(Number(data.lastPrice));}}catch(_){} };
+ ws.onerror=()=>setStatus('خطا در WebSocket؛ تلاش مجدد...','err');
+ ws.onclose=()=>{setStatus('اتصال قطع شد؛ تلاش مجدد...','yellow');clearTimeout(reconnectTimer);reconnectTimer=setTimeout(connectWS,5000);};
+}
+async function initialMarket(){
+ try{const r=await fetch('https://api.wallex.ir/v1/markets');const j=await r.json();const m=j?.result?.symbols?.[SYMBOL];if(m){const p=Number(m.stats?.lastPrice||m.stats?.bidPrice||m.stats?.askPrice);if(p){quotePrice(p);lastPrice=p;$('low').value=Math.round(p*0.95);$('high').value=Math.round(p*1.05);$('price').value=Math.round(p);buildGrid();}}}catch(e){setStatus('قیمت اولیه دریافت نشد؛ WebSocket در حال تلاش است','yellow');}
+}
+$('capital').addEventListener('input',updateStats);$('price').addEventListener('input',()=>{if(!running)$('currentPrice').textContent=fmt(+$('price').value)});
+buildGrid();renderTrades();updateStats();initialMarket();connectWS();
 </script></body></html>
