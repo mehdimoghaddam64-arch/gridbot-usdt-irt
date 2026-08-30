@@ -74,14 +74,29 @@ function updateStats(){ $('profitOut').textContent=fmt(profit)+' تومان';$('
 function resetBot(){running=false;trades=[];profit=0;quote=+$('capital').value;base=0;lastPrice=quote?lastPrice:+$('price').value;$('toggle').textContent='شروع Paper';$('toggle').className='btn start';$('mode').textContent='PAPER';setStatus('ربات متوقف است','off');buildGrid();renderTrades();updateStats();}
 function connectWS(){
  try{ws=new WebSocket(WS_URL);}catch(e){setStatus('خطا در اتصال بازار','err');return}
- ws.onopen=()=>{setStatus('قیمت زنده والکس متصل است','on');ws.send(JSON.stringify(['subscribe',{channel:SYMBOL+'@marketCap'}]));};
- ws.onmessage=e=>{try{let msg=JSON.parse(e.data);let data=Array.isArray(msg)?msg[1]:msg;if(data&&data.symbol===SYMBOL&&data.lastPrice){$('bid').textContent=fmt(data.bidPrice);$('ask').textContent=fmt(data.askPrice);$('marketStatus').textContent=data.lastTradeSide||'ONLINE';processPrice(Number(data.lastPrice));}}catch(_){} };
+ ws.onopen=()=>{setStatus('قیمت زنده والکس متصل است','on');ws.send(JSON.stringify(['subscribe',{channel:'all@price'}]));};
+ ws.onmessage=e=>{try{let msg=JSON.parse(e.data);let data=Array.isArray(msg)?msg[1]:msg;if(data&&data.symbol===SYMBOL){const p=Number(data.price);if(Number.isFinite(p)&&p>0){$('marketStatus').textContent='ONLINE';processPrice(p);}}}catch(_){} };
  ws.onerror=()=>setStatus('خطا در WebSocket؛ تلاش مجدد...','err');
  ws.onclose=()=>{setStatus('اتصال قطع شد؛ تلاش مجدد...','yellow');clearTimeout(reconnectTimer);reconnectTimer=setTimeout(connectWS,5000);};
 }
+let pollTimer=null;
+async function pollMarket(){
+ try{
+  const r=await fetch('https://api.wallex.ir/v1/markets',{cache:'no-store'});
+  const j=await r.json();
+  const m=j?.result?.symbols?.[SYMBOL];
+  if(m?.stats){
+   const p=Number(m.stats.lastPrice), bid=Number(m.stats.bidPrice), ask=Number(m.stats.askPrice);
+   if(Number.isFinite(bid)) $('bid').textContent=fmt(bid);
+   if(Number.isFinite(ask)) $('ask').textContent=fmt(ask);
+   if(Number.isFinite(p)&&p>0){$('marketStatus').textContent='ONLINE';processPrice(p);setStatus('قیمت زنده والکس دریافت شد','on');}
+  }
+ }catch(e){}
+}
+function startPolling(){pollMarket();clearInterval(pollTimer);pollTimer=setInterval(pollMarket,5000);}
 async function initialMarket(){
  try{const r=await fetch('https://api.wallex.ir/v1/markets');const j=await r.json();const m=j?.result?.symbols?.[SYMBOL];if(m){const p=Number(m.stats?.lastPrice||m.stats?.bidPrice||m.stats?.askPrice);if(p){quotePrice(p);lastPrice=p;$('low').value=Math.round(p*0.95);$('high').value=Math.round(p*1.05);$('price').value=Math.round(p);buildGrid();}}}catch(e){setStatus('قیمت اولیه دریافت نشد؛ WebSocket در حال تلاش است','yellow');}
 }
 $('capital').addEventListener('input',updateStats);$('price').addEventListener('input',()=>{if(!running)$('currentPrice').textContent=fmt(+$('price').value)});
-buildGrid();renderTrades();updateStats();initialMarket();connectWS();
+buildGrid();renderTrades();updateStats();initialMarket();connectWS();startPolling();
 </script></body></html>
