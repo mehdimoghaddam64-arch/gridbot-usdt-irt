@@ -91,55 +91,31 @@ setInterval(loadPrice,5000);
 </script>
 
 <section class="card" style="margin-top:14px">
-  <h3 style="margin:0">📈 نمودار گرید</h3>
-  <div style="opacity:.7;font-size:12px;margin:5px 0 10px">قیمت زنده + خطوط خرید و فروش گرید</div>
-  <div style="height:320px"><canvas id="gridChart"></canvas></div>
+<h3 style="margin:0 0 4px">📈 نمودار زنده گرید</h3>
+<div class="muted" style="font-size:12px;margin-bottom:10px">قیمت USDT/IRT + خطوط گرید + نقاط BUY و SELL</div>
+<div style="height:330px;position:relative"><canvas id="gridChart"></canvas></div>
+<div id="tradeSignals" class="small" style="margin-top:12px"></div>
 </section>
-
-
 <script>
 (function(){
-  let chart=null, history=[];
-  function n(v){v=Number(v);return Number.isFinite(v)?v:null;}
-  function price(){
-    const ids=['#price','#currentPrice','#livePrice','#wallexPrice'];
-    for(const id of ids){
-      const e=document.querySelector(id);
-      if(e){
-        const x=n(e.textContent.replace(/[^\d.]/g,''));
-        if(x>0)return x;
-      }
-    }
-    return n(window.currentPrice)||n(window.lastPrice)||n(window.wallexPrice);
-  }
-  function levels(){
-    if(Array.isArray(window.gridLevels)) return window.gridLevels.map(n).filter(x=>x);
-    const f=n(document.querySelector('#floor')?.value||95000);
-    const c=n(document.querySelector('#ceiling')?.value||105000);
-    const g=Math.max(2,parseInt(document.querySelector('#gridCount')?.value||10));
-    if(c>f)return Array.from({length:g+1},(_,i)=>f+(c-f)*i/g);
-    return [];
-  }
-  function draw(){
-    if(typeof Chart==='undefined')return;
-    const p=price(), lv=levels();
-    if(p){history.push({t:new Date().toLocaleTimeString('fa-IR'),p});if(history.length>100)history.shift();}
-    const labels=history.map(x=>x.t);
-    const ds=[{label:'قیمت USDT/IRT',data:history.map(x=>x.p),borderWidth:3,pointRadius:0,tension:.2}];
-    lv.forEach((x,i)=>ds.push({label:'گرید '+(i+1)+' — '+Math.round(x).toLocaleString('en-US'),data:labels.map(()=>x),borderWidth:1,pointRadius:0,borderDash:[5,5]}));
-    const el=document.getElementById('gridChart'); if(!el)return;
-    if(chart)chart.destroy();
-    chart=new Chart(el,{type:'line',data:{labels,datasets:ds},options:{
-      responsive:true,maintainAspectRatio:false,animation:false,
-      interaction:{mode:'index',intersect:false},
-      plugins:{legend:{display:lv.length<=12,position:'bottom',labels:{boxWidth:14,font:{size:9}}},
-      tooltip:{callbacks:{label:c=>c.dataset.label+': '+Number(c.parsed.y).toLocaleString('en-US')+' تومان'}}},
-      scales:{x:{ticks:{maxTicksLimit:6}},y:{ticks:{callback:v=>Number(v).toLocaleString('en-US')}}}
-    }});
-  }
-  window.updateGridChart=draw;
-  setInterval(draw,3000);
-  document.addEventListener('DOMContentLoaded',()=>setTimeout(draw,800));
+let chart=null,history=[],signals=[],prev=null;
+const N=v=>{let x=Number(v);return Number.isFinite(x)?x:null};
+function P(){let e=document.getElementById('price');if(!e)return null;let x=N((e.textContent||'').replace(/[^\d.]/g,''));return x>0?x:null}
+function L(){let f=N(document.getElementById('floor')?.value),c=N(document.getElementById('ceiling')?.value),g=Math.max(2,parseInt(document.getElementById('grids')?.value||10));return c>f?Array.from({length:g+1},(_,i)=>f+(c-f)*i/g):[]}
+function cross(a,b,ls){if(a==null||a===b)return[];let z=[];ls.forEach((v,i)=>{if(b<a&&v<a&&v>=b)z.push({v,i,s:'BUY'});if(b>a&&v>a&&v<=b)z.push({v,i,s:'SELL'})});return z}
+function draw(){
+if(typeof Chart==='undefined')return;let p=P(),ls=L();
+if(p){cross(prev,p,ls).forEach(x=>signals.push({p:x.v,i:x.i,s:x.s,t:new Date().toLocaleTimeString('fa-IR')}));prev=p;history.push({t:new Date().toLocaleTimeString('fa-IR'),p});if(history.length>120)history.shift();if(signals.length>40)signals=signals.slice(-40)}
+let labels=history.map(x=>x.t),ds=[{label:'قیمت USDT/IRT',data:history.map(x=>x.p),borderWidth:3,pointRadius:0,tension:.2}];
+ls.forEach((v,i)=>ds.push({label:'گرید '+(i+1),data:labels.map(()=>v),borderWidth:1,pointRadius:0,borderDash:[5,5]}));
+let buys=[],sells=[];signals.forEach(s=>{let k=history.map(h=>h.t).lastIndexOf(s.t);if(k>=0)(s.s==='BUY'?buys:sells).push({x:k,y:s.p})});
+if(buys.length)ds.push({type:'scatter',label:'🟢 BUY',data:buys,pointRadius:8});
+if(sells.length)ds.push({type:'scatter',label:'🔴 SELL',data:sells,pointRadius:8});
+let c=document.getElementById('gridChart');if(!c)return;if(chart)chart.destroy();
+chart=new Chart(c,{type:'line',data:{labels:labels,datasets:ds},options:{responsive:true,maintainAspectRatio:false,animation:false,plugins:{legend:{display:ls.length<=12,position:'bottom',labels:{boxWidth:12,font:{size:9}}}},scales:{x:{ticks:{maxTicksLimit:6}},y:{ticks:{callback:v=>Number(v).toLocaleString('en-US')}}}}});
+let e=document.getElementById('tradeSignals');e.innerHTML=signals.length?signals.slice().reverse().slice(0,8).map(s=>'<div class="line"><span>'+(s.s==='BUY'?'🟢 BUY':'🔴 SELL')+' — گرید '+(s.i+1)+'</span><b>'+Math.round(s.p).toLocaleString('en-US')+'</b></div>').join(''):'<span class="muted">هنوز سیگنال گرید ثبت نشده است.</span>';
+}
+setInterval(draw,2000);setTimeout(draw,800);
 })();
 </script>
 
