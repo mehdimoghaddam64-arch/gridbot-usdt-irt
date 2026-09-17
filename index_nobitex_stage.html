@@ -1,0 +1,958 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#080d18">
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<title>Grid Bot — USDT/IRT</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  background:#080d18;
+  color:#eef2ff;
+  font-family:Tahoma,Arial,sans-serif
+}
+
+button,input{
+  font:inherit
+}
+
+.wrap{
+  max-width:720px;
+  margin:auto;
+  padding:18px
+}
+
+.top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  margin-bottom:18px
+}
+
+.brand{
+  font-size:26px;
+  font-weight:800
+}
+
+.sub{
+  color:#9aa4b8;
+  margin-top:5px
+}
+
+.badge{
+  padding:10px 14px;
+  border-radius:18px;
+  background:#242a38;
+  color:#aab4c9
+}
+
+.card{
+  background:#0d1320;
+  border:1px solid #1b2435;
+  border-radius:22px;
+  padding:18px;
+  margin-bottom:16px
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:14px
+}
+
+.stat{
+  background:#080c15;
+  border-radius:16px;
+  padding:16px
+}
+
+.label{
+  color:#8f9ab0;
+  font-size:14px;
+  margin-bottom:8px
+}
+
+.price{
+  font-size:34px;
+  font-weight:800;
+  margin:8px 0
+}
+
+.muted{
+  color:#8f9ab0
+}
+
+.ok{
+  color:#16c784
+}
+
+.err{
+  color:#ef5350
+}
+
+.dot{
+  display:inline-block;
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  background:#16c784;
+  margin-left:6px
+}
+
+.dot.off{
+  background:#ef5350
+}
+
+.field{
+  margin-top:12px
+}
+
+.field label{
+  display:block;
+  color:#9aa4b8;
+  margin-bottom:7px
+}
+
+input{
+  width:100%;
+  padding:14px;
+  border-radius:14px;
+  border:1px solid #253047;
+  background:#070a11;
+  color:#fff;
+  outline:none
+}
+
+input:focus{
+  border-color:#4c78ff
+}
+
+.actions{
+  display:flex;
+  gap:10px;
+  margin-top:14px
+}
+
+button{
+  border:0;
+  border-radius:14px;
+  padding:14px;
+  cursor:pointer;
+  flex:1;
+  background:#5865f2;
+  color:#fff;
+  font-weight:700
+}
+
+button.secondary{
+  background:#1b2334
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:13px
+}
+
+th,td{
+  padding:12px 7px;
+  text-align:center;
+  border-bottom:1px solid #20283a
+}
+
+th{
+  color:#9aa4b8
+}
+
+.buy{
+  color:#16c784;
+  font-weight:700
+}
+
+.sell{
+  color:#ef5350;
+  font-weight:700
+}
+
+.hold{
+  color:#f0b90b;
+  font-weight:700
+}
+
+.ready{
+  color:#aab4c9
+}
+
+.small{
+  font-size:12px;
+  line-height:1.8
+}
+
+.notice{
+  color:#9aa4b8;
+  line-height:1.9
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrap">
+
+  <div class="top">
+
+    <div>
+      <div class="brand">GRID BOT</div>
+      <div class="sub">نسخه وب موبایل • USDT / IRT</div>
+    </div>
+
+    <div id="mode" class="badge">PAPER</div>
+
+  </div>
+
+
+  <!-- PRICE -->
+
+  <div class="card">
+
+    <div class="muted">قیمت لحظه‌ای نوبیتکس</div>
+
+    <div id="currentPrice" class="price">
+      در حال دریافت...
+    </div>
+
+    <div id="status" class="muted">
+      <span id="statusDot" class="dot off"></span>
+      در حال اتصال به نوبیتکس...
+    </div>
+
+    <div class="grid" style="margin-top:12px">
+
+      <div class="stat">
+
+        <div class="label">Bid</div>
+
+        <div
+          id="bid"
+          class="price"
+          style="font-size:22px"
+        >-</div>
+
+      </div>
+
+      <div class="stat">
+
+        <div class="label">Ask</div>
+
+        <div
+          id="ask"
+          class="price"
+          style="font-size:22px"
+        >-</div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- STATS -->
+
+  <div class="grid">
+
+    <div class="stat">
+
+      <div class="label">سرمایه Paper</div>
+
+      <div
+        id="capitalView"
+        class="price"
+        style="font-size:25px"
+      >10,000,000</div>
+
+      <div class="muted">تومان</div>
+
+    </div>
+
+
+    <div class="stat">
+
+      <div class="label">سود خالص</div>
+
+      <div
+        id="profitView"
+        class="price"
+        style="font-size:25px"
+      >0</div>
+
+      <div class="muted">تومان</div>
+
+    </div>
+
+
+    <div class="stat">
+
+      <div class="label">تعداد معاملات</div>
+
+      <div
+        id="tradeCount"
+        class="price"
+        style="font-size:25px"
+      >0</div>
+
+    </div>
+
+
+    <div class="stat">
+
+      <div class="label">گریدها</div>
+
+      <div
+        id="countView"
+        class="price"
+        style="font-size:25px"
+      >10</div>
+
+    </div>
+
+  </div>
+
+
+  <!-- SETTINGS -->
+
+  <div class="card">
+
+    <h2 style="margin-top:0">
+      تنظیمات Grid
+    </h2>
+
+
+    <div class="field">
+
+      <label for="low">
+        قیمت کف
+      </label>
+
+      <input
+        id="low"
+        type="number"
+        value="95000"
+      >
+
+    </div>
+
+
+    <div class="field">
+
+      <label for="high">
+        قیمت سقف
+      </label>
+
+      <input
+        id="high"
+        type="number"
+        value="105000"
+      >
+
+    </div>
+
+
+    <div class="field">
+
+      <label for="count">
+        تعداد Grid
+      </label>
+
+      <input
+        id="count"
+        type="number"
+        min="2"
+        max="100"
+        value="10"
+      >
+
+    </div>
+
+
+    <div class="field">
+
+      <label for="capital">
+        سرمایه (تومان)
+      </label>
+
+      <input
+        id="capital"
+        type="number"
+        value="10000000"
+      >
+
+    </div>
+
+
+    <div class="field">
+
+      <label for="price">
+        قیمت مرجع
+      </label>
+
+      <input
+        id="price"
+        type="number"
+        value="100000"
+      >
+
+    </div>
+
+
+    <div class="field">
+
+      <label for="fee">
+        کارمزد (%)
+      </label>
+
+      <input
+        id="fee"
+        type="number"
+        step="0.01"
+        value="0.2"
+      >
+
+    </div>
+
+
+    <div class="actions">
+
+      <button onclick="buildGrid()">
+        ساخت Grid
+      </button>
+
+      <button
+        class="secondary"
+        id="toggle"
+        onclick="toggleBot()"
+      >
+        شروع Paper
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- GRID TABLE -->
+
+  <div class="card">
+
+    <h2 style="margin-top:0">
+      گریدها
+    </h2>
+
+    <div style="overflow:auto">
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>#</th>
+
+            <th>قیمت</th>
+
+            <th>عمل بعدی</th>
+
+            <th>وضعیت</th>
+
+          </tr>
+
+        </thead>
+
+        <tbody id="gridBody">
+
+          <tr>
+
+            <td colspan="4">
+              در حال ساخت...
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+
+  <!-- TRADES -->
+
+  <div class="card">
+
+    <h2 style="margin-top:0">
+      معاملات Paper
+    </h2>
+
+    <div style="overflow:auto">
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>زمان</th>
+
+            <th>نوع</th>
+
+            <th>قیمت</th>
+
+            <th>مقدار USDT</th>
+
+            <th>کارمزد</th>
+
+            <th>سود</th>
+
+          </tr>
+
+        </thead>
+
+        <tbody id="tradeBody">
+
+          <tr>
+
+            <td colspan="6">
+              هنوز معامله‌ای ثبت نشده
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+
+    <div class="actions">
+
+      <button
+        class="secondary"
+        onclick="resetBot()"
+      >
+        ریست Paper
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <div class="card notice">
+
+    قیمت از API عمومی نوبیتکس دریافت می‌شود.
+
+    این نسخه فقط برای Paper Trading و تست منطق Grid است
+    و هیچ سفارش واقعی ارسال نمی‌کند.
+
+    <br><br>
+
+    برای معاملات واقعی، کلید API نباید داخل GitHub
+    یا کد مرورگر قرار بگیرد و باید روی Backend امن نگهداری شود.
+
+  </div>
+
+</div>
+
+
+<script>
+
+const SYMBOL = 'USDTTMN';
+
+const MARKET_URL =
+  'https://api.nobitex.ir/v3/orderbook/USDTIRT';
+
+let grids = [];
+
+let trades = [];
+
+let running = false;
+
+let lastPrice = null;
+
+let quoteBalance = 0;
+
+let baseBalance = 0;
+
+let realizedProfit = 0;
+
+let tradeCount = 0;
+
+let pollTimer = null;
+
+
+/* =========================
+   HELPERS
+========================= */
+
+function fmt(n){
+
+  if(!Number.isFinite(Number(n))){
+    return '-';
+  }
+
+  return Number(n).toLocaleString('en-US',{
+    maximumFractionDigits:2
+  });
+
+}
+
+
+function nowTime(){
+
+  return new Date().toLocaleTimeString(
+    'fa-IR',
+    {
+      hour:'2-digit',
+      minute:'2-digit',
+      second:'2-digit'
+    }
+  );
+
+}
+
+
+function getNumber(id,fallback=0){
+
+  const el=document.getElementById(id);
+
+  if(!el){
+    return fallback;
+  }
+
+  const n=Number(el.value);
+
+  return Number.isFinite(n)
+    ? n
+    : fallback;
+
+}
+
+
+function setStatus(text,on=true){
+
+  const el=
+    document.getElementById('status');
+
+  const dot=
+    document.getElementById('statusDot');
+
+  if(el){
+
+    el.innerHTML=
+      '<span class="dot '+(on?'':'off')+'"></span>'+
+      text;
+
+  }
+
+  if(dot){
+
+    dot.className=
+      'dot '+(on?'':'off');
+
+  }
+
+}
+
+
+/* =========================
+   GRID
+========================= */
+
+function buildGrid(){
+
+  const lo=getNumber('low');
+
+  const hi=getNumber('high');
+
+  const n=Math.max(
+    2,
+    Math.floor(
+      getNumber('count',10)
+    )
+  );
+
+
+  if(!Number.isFinite(lo) ||
+     !Number.isFinite(hi) ||
+     hi<=lo){
+
+    alert(
+      'قیمت کف و سقف صحیح وارد کنید'
+    );
+
+    return;
+  }
+
+
+  const step=
+    (hi-lo)/(n-1);
+
+
+  grids=[];
+
+
+  for(let i=0;i<n;i++){
+
+    grids.push({
+
+      id:i+1,
+
+      price:lo+(i*step),
+
+      status:'READY',
+
+      buyPrice:0,
+
+      sellPrice:0,
+
+      amount:0,
+
+      buyCost:0,
+
+      buyFee:0,
+
+      sellFee:0,
+
+      profit:0,
+
+      buyTime:null,
+
+      next:'BUY',
+
+      state:'آماده'
+
+    });
+
+  }
+
+
+  document.getElementById(
+    'countView'
+  ).textContent=n;
+
+
+  renderGrid();
+
+}
+
+
+/* =========================
+   GRID RENDER
+========================= */
+
+function renderGrid(){
+
+  const body=
+    document.getElementById(
+      'gridBody'
+    );
+
+
+  if(!body){
+    return;
+  }
+
+
+  if(!grids.length){
+
+    body.innerHTML=
+      '<tr><td colspan="4">'+
+      'Grid ساخته نشده'+
+      '</td></tr>';
+
+    return;
+  }
+
+
+  body.innerHTML=
+    grids
+      .slice()
+      .reverse()
+      .map(g=>{
+
+        let cls='ready';
+
+        if(g.status==='HOLD'){
+          cls='hold';
+        }
+
+        if(g.status==='SOLD'){
+          cls='sell';
+        }
+
+
+        let state=g.state;
+
+        if(g.status==='HOLD'){
+          state='در انتظار فروش';
+        }
+
+
+        return `
+
+          <tr>
+
+            <td>
+              ${g.id}
+            </td>
+
+            <td>
+              ${fmt(g.price)}
+            </td>
+
+            <td>
+              ${g.status==='HOLD'
+                ? 'SELL @ '+fmt(g.sellPrice)
+                : 'BUY'}
+            </td>
+
+            <td class="${cls}">
+              ${state}
+            </td>
+
+          </tr>
+
+        `;
+
+      })
+      .join('');
+
+}
+
+
+/* =========================
+   PAPER
+========================= */
+
+function toggleBot(){
+
+  running=!running;
+
+
+  const btn=
+    document.getElementById(
+      'toggle'
+    );
+
+
+  const mode=
+    document.getElementById(
+      'mode'
+    );
+
+
+  if(running){
+
+    quoteBalance=
+      getNumber(
+        'capital',
+        10000000
+      );
+
+    baseBalance=0;
+
+    realizedProfit=0;
+
+    tradeCount=0;
+
+    trades=[];
+
+    document.getElementById(
+      'profitView'
+    ).textContent='0';
+
+    document.getElementById(
+      'tradeCount'
+    ).textContent='0';
+
+
+    btn.textContent=
+      'توقف Paper';
+
+    mode.textContent=
+      'PAPER ON';
+
+
+    setStatus(
+      'Paper Trading فعال است',
+      true
+    );
+
+
+  }else{
+
+    btn.textContent=
+      'شروع Paper';
+
+    mode.textContent=
+      'PAPER';
+
+    setStatus(
+      'Paper Trading متوقف است',
+      true
+    );
+
+  }
+
+}
+
+
+/* =========================
+   CROSS
+========================= */
+
+function crossedDown(prev,p){
+
+  if(
+    prev===null ||
+    !Number.isFinite(prev)
+  ){
+    return false;
+  }
+
+  return prev>p;
+
+}
+
+
+function crossedUp(prev,p){
+
+  if(
+    prev===null ||
+    !Number.isFinite(prev)
+  ){
+    return false;
+  }
+
+  return prev<p;
+
+}
+
+
+/* =========================
+   BUY
+========================= */
+
+function executeBuy(g,p){
+
+  const
